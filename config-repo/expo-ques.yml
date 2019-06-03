@@ -1,1 +1,51 @@
-port: 8300
+# 项目名称
+spring:
+  application:
+    name: expo-questionnaire
+  datasource:
+    url: jdbc:mysql://${MYSQL-SERVER:10.0.8.31:3310}/repo_activity?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: ${MYSQL-PWD:Tontron1169}
+    druid:
+      max-wait: 30000
+      query-timeout: 10
+      validation-query: SELECT 1
+      use-global-data-source-stat: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: UTC
+  jpa:
+    show-sql: true
+#  zipkin:
+#    base-url: http://localhost:9411  # 指定了 Zipkin 服务器的地址
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${REGISTRY-SERVER:http://peer1:10000/eureka/}
+
+zuul:
+  routes:
+    questionnaire:   #路由名称，随意，唯一即可
+      path: /questionnaire/**
+      serviceId: expo-questionnaire
+  # prefix: /api
+  #不忽略任何头部信息，所有header都转发到下游的资源服务器
+  sensitiveHeaders:
+  # 不忽略框架和权限相关头信息
+  #ignore-security-headers: false
+
+
+server:
+  port: 8300
+swagger:
+  enabled: true
+  exclude-path: /error/**
+
+#文件路径
+file:
+  upload:
+    base-path: ${FILE-BASEPATH:c:/static/upload/}
+    extend-path: ques/
+
